@@ -1,4 +1,6 @@
 package CUHA.homepage.service.impl;
 
-public class BoardServiceImpl {
+import CUHA.homepage.service.BoardService;
+
+public class BoardServiceImpl implements BoardService {
 }
