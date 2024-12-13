@@ -5,8 +5,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.security.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -24,5 +26,6 @@ public class User {
     private boolean isActive;
     private Gender gender;
     private UserRole userRole;
-    private Timestamp created_at;
+    @CreatedDate
+    private LocalDateTime created_at;
 }

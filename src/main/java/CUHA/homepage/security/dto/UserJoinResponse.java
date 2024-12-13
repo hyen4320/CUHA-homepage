@@ -7,5 +7,5 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileResponse {
+public class UserJoinResponse {
 }

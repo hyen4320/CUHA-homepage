@@ -2,6 +2,9 @@ package CUHA.homepage.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -18,5 +21,7 @@ public class Board {
     private User author;
     private String title;
     private String content;
+    @CreatedDate
+    private LocalDateTime created_at;
 
 }

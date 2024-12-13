@@ -2,6 +2,9 @@ package CUHA.homepage.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -20,4 +23,6 @@ public class Comment {
     @JoinColumn(name="author_id")
     private User author;
     private String comment;
+    @CreatedDate
+    private LocalDateTime created_at;
 }

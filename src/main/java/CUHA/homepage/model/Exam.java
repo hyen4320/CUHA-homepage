@@ -2,8 +2,10 @@ package CUHA.homepage.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
 import java.security.Timestamp;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -22,6 +24,7 @@ public class Exam {
     private User author;
     private String answer;
     private Long score;
-    private Timestamp created_at;
+    @CreatedDate
+    private LocalDateTime created_at;
 
 }

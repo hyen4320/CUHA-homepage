@@ -2,7 +2,9 @@ package CUHA.homepage.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
@@ -22,4 +24,6 @@ public class File {
     private Board board_id;
     @ManyToOne
     private Exam exam_id;
+    @CreatedDate
+    private LocalDateTime created_at;
 }
