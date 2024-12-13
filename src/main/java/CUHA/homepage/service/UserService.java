@@ -3,21 +3,22 @@ package CUHA.homepage.service;
 import CUHA.homepage.model.Gender;
 import CUHA.homepage.model.User;
 import CUHA.homepage.model.UserRole;
+import CUHA.homepage.security.dto.*;
 
 import java.util.List;
 
 public interface UserService {
-    void addUser(User user);
-    void updateUser(User user);
-    void deleteUser(Long id);
-    User getUser(Long id);
-    List<User> getUsers();
-    void deactivateUser(Long id);
-    void activateUser(Long id);
-    Long getScore(Long id);
-    void setScore(Long id, Long score);
-    void setUserRole(Long id, UserRole userRole);
-    UserRole getUserRole(Long id);
-    Gender getGender(Long id);
-    Gender setGender(Long id, Gender gender);
+    UserJoinResponse addUser(UserjoinRequest user);
+    UserRUDResponse updateUser(UserjoinRequest user);
+    UserRUDResponse deleteUser(UserRUDRequest user);
+    UserFindResponse getUser(UserRUDRequest user);
+    List<UserFindResponse> getUsers();
+    UserRUDResponse deactivateUser(UserRUDRequest user);
+    UserRUDResponse activateUser(UserRUDRequest user);
+    Long getScore(UserRUDRequest user);
+    UserRUDResponse setScore(UserRUDRequest user, Long score);
+    UserRUDResponse setUserRole(UserRUDRequest user, UserRole userRole);
+    UserRole getUserRole(UserRUDRequest user);
+    Gender getGender(UserRUDRequest user);
+    Gender setGender(UserRUDRequest user, Gender gender);
 }

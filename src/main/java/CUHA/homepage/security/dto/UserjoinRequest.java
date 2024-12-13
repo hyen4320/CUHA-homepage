@@ -14,9 +14,6 @@ import java.security.Timestamp;
 public class UserjoinRequest {
     private String username;
     private String password;
-    private Long score=0L;
-    private boolean isActive;
+    private int score;
     private Gender gender;
-    private UserRole userRole;
-}
 }

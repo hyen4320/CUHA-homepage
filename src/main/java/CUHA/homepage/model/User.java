@@ -1,9 +1,6 @@
 package CUHA.homepage.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 
@@ -24,7 +21,9 @@ public class User {
     private String password;
     private Long score;
     private boolean isActive;
+    @Enumerated(EnumType.STRING)
     private Gender gender;
+    @Enumerated(EnumType.STRING)
     private UserRole userRole;
     @CreatedDate
     private LocalDateTime created_at;
