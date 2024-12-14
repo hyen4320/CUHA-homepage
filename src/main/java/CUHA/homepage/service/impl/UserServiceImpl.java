@@ -6,12 +6,15 @@ import CUHA.homepage.model.UserRole;
 import CUHA.homepage.repository.UserRepository;
 import CUHA.homepage.security.dto.*;
 import CUHA.homepage.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @Service
 @Slf4j
@@ -64,51 +67,157 @@ public class UserServiceImpl implements UserService {
                 .score(userInfo.getScore())
                 .gender(userInfo.getGender())
                 .message("유저 검색에 성공했습니다.").build();
-        return null;
+        return userFindResponse;
+    }
+
+    @Override
+    public UserLoginResponse loginUser(UserLoginRequest user) {
+        Optional<User> loginUser = userRepository.findByUsername(user.getUsername());
+        if(loginUser.isEmpty()){
+            return UserLoginResponse.builder()
+                    .message("로그인 실패")
+                    .success(false)
+                    .build();
+        }
+        User userInfo= loginUser.get();
+        if(userInfo.getPassword().equals(user.getPassword())&& userInfo.getUsername().equals(user.getUsername())){
+            return UserLoginResponse.builder()
+                    .message("로그인 성공")
+                    .success(true)
+                    .build();
+        }
+        else{
+            return UserLoginResponse.builder()
+                    .message("로그인 실패")
+                    .success(false)
+                    .build();
+        }
     }
 
     @Override
     public List<UserFindResponse> getUsers() {
-        return List.of();
+        //스프림으로 User->UserFindResponse로 바꿔주기
+        List<UserFindResponse> result;
+        List<User> streamUser= userRepository.findAll();
+        streamUser.stream().map(x-> UserFindResponse.builder()
+                .username(x.getUsername())
+                .score(x.getScore())
+                .gender(x.getGender())
+                .userRole(x.getUserRole())
+                .isActive(x.isActive())
+                .created_at(x.getCreated_at())
+                .build()).toList();
+
+        return streamUser.stream().map(x-> UserFindResponse.builder()
+                .username(x.getUsername())
+                .score(x.getScore())
+                .gender(x.getGender())
+                .userRole(x.getUserRole())
+                .isActive(x.isActive())
+                .created_at(x.getCreated_at())
+                .build()).toList();
     }
 
     @Override
-    public UserRUDResponse deactivateUser(UserRUDRequest user) {
-        return null;
+    public UserRUDResponse deactivateUser(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Optional<User> checkUser = userRepository.findByUsername(session.getAttribute("user").toString());
+        if (checkUser.isEmpty()) {
+            return UserRUDResponse.builder().message("존재하지 않는 사용자입니다.").build();
+        }
+        if ((checkUser.get().getUserRole() == UserRole.admin || checkUser.get().getUserRole() == UserRole.staff)) {
+            checkUser.get().setActive(false);
+        } else {
+            return UserRUDResponse.builder().message("존재하지 않는 사용자입니다.").build();
+        }
+        return UserRUDResponse.builder().message("뭔가 중대한 에러").build();
     }
 
     @Override
-    public UserRUDResponse activateUser(UserRUDRequest user) {
-        return null;
+    public UserRUDResponse activateUser(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Optional<User> checkUser = userRepository.findByUsername(session.getAttribute("user").toString());
+        if (checkUser.isEmpty()) {
+            return UserRUDResponse.builder().message("존재하지 않는 사용자입니다.").build();
+        }
+        if ((checkUser.get().getUserRole() == UserRole.admin || checkUser.get().getUserRole() == UserRole.staff)) {
+            checkUser.get().setActive(false);
+        } else {
+            return UserRUDResponse.builder().message("존재하지 않는 사용자입니다.").build();
+        }
+        return UserRUDResponse.builder().message("뭔가 중대한 에러").build();
     }
 
     @Override
-    public Long getScore(UserRUDRequest user) {
-        return 0L;
+    public Long getScore(String user) {
+        Optional<User> findScore=userRepository.findByUsername(user);
+        if(findScore.isEmpty()){
+            throw new IllegalArgumentException("찾을 수 없는 사용자입니다ㅏ.");
+        }
+        System.out.println(findScore.get().getScore());
+        return findScore.get().getScore();
+
     }
 
     @Override
     public UserRUDResponse setScore(UserRUDRequest user, Long score) {
-        return null;
+
+        Optional<User> findScore=userRepository.findByUsername(user.getUsername());
+        if(findScore.isEmpty()){
+            throw new IllegalArgumentException("찾을 수 없는 사용자입니다ㅏ.");
+        }
+        findScore.get().setScore(score);
+        return UserRUDResponse.builder().message("점수가 변경되었습니다.").build();
     }
 
     @Override
-    public UserRUDResponse setUserRole(UserRUDRequest user, UserRole userRole) {
-        return null;
+    public UserRUDResponse setUserRole(UserRUDRequest user, UserRole userRole,HttpServletRequest req) {
+        Optional<User> checkUser = userRepository.findByUsername(user.getUsername());
+        if (checkUser.isEmpty()) {
+            return null;
+        }
+        if ((checkUser.get().getUserRole() == UserRole.admin || checkUser.get().getUserRole() == UserRole.staff)) {
+            checkUser.get().setUserRole(userRole);
+            return UserRUDResponse.builder().message("변경에 성공하였습니다.").build();
+        } else {
+            return null;
+        }
     }
 
     @Override
     public UserRole getUserRole(UserRUDRequest user) {
-        return null;
+
+        Optional<User> checkUser = userRepository.findByUsername(user.getUsername());
+        if (checkUser.isEmpty()) {
+            return null;
+        }
+        if ((checkUser.get().getUserRole() == UserRole.admin || checkUser.get().getUserRole() == UserRole.staff)) {
+            checkUser.get().setActive(false);
+            return checkUser.get().getUserRole();
+        } else {
+            return null;
+        }
     }
 
     @Override
-    public Gender getGender(UserRUDRequest user) {
-        return null;
+    public Gender getGender(String user) {
+        Optional<User> findGender=userRepository.findByUsername(user);
+        System.out.println(user);
+        System.out.println(findGender);
+        if(findGender.isEmpty()){
+            throw new IllegalArgumentException("찾을 수 없는 사용자입니다ㅏ.");
+        }
+        System.out.println(findGender.get().getGender());
+        return findGender.get().getGender();
     }
 
     @Override
-    public Gender setGender(UserRUDRequest user, Gender gender) {
-        return null;
+    public UserRUDResponse setGender(UserRUDRequest user, Gender gender) {
+        Optional<User> findScore=userRepository.findByUsername(user.getUsername());
+        if(findScore.isEmpty()){
+            throw new IllegalArgumentException("찾을 수 없는 사용자입니다ㅏ.");
+        }
+        findScore.get().setGender(gender);
+        return UserRUDResponse.builder().message("성별이 변경되었습니다.").build();
     }
 }

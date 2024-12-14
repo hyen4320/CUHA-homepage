@@ -1,8 +1,10 @@
 package CUHA.homepage.controller;
 
-import CUHA.homepage.security.dto.UserJoinResponse;
-import CUHA.homepage.security.dto.UserjoinRequest;
+import CUHA.homepage.model.Gender;
+import CUHA.homepage.model.User;
+import CUHA.homepage.security.dto.*;
 import CUHA.homepage.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,5 +17,32 @@ public class UserController {
     @PostMapping("/join")
     public UserJoinResponse join(@RequestBody UserjoinRequest user) {
         return userService.addUser(user);
+    }
+    @PostMapping("/login")
+    public UserLoginResponse login(@RequestBody UserLoginRequest user, HttpServletRequest request) {
+        UserLoginResponse loginUser=userService.loginUser(user);
+        if(loginUser.isSuccess()==true){
+            request.getSession().setAttribute("user", user.getUsername());
+            System.out.println(request.getSession().getAttribute("user"));
+            //session이름 jsessionid를 사용함
+            return loginUser;
+        }
+        else{
+            return loginUser;
+        }
+    }
+    @PutMapping("/set/gender")
+    public User setGender(@RequestBody UserRUDRequest username) {
+        return null;
+    }
+
+    @GetMapping("/gender")
+    public Gender getGender(@RequestParam String user) {
+
+        return userService.getGender(user);
+    }
+    @GetMapping("/score")
+    public Long getScore(@RequestParam String user){
+        return userService.getScore(user);
     }
 }
