@@ -1,11 +1,9 @@
 package CUHA.homepage.service;
 
 import CUHA.homepage.model.Gender;
-import CUHA.homepage.model.User;
 import CUHA.homepage.model.UserRole;
-import CUHA.homepage.security.dto.*;
+import CUHA.homepage.security.dto.userDTO.*;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 
 import java.util.List;
 

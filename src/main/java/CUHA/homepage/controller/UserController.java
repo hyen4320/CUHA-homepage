@@ -1,8 +1,7 @@
 package CUHA.homepage.controller;
 
 import CUHA.homepage.model.Gender;
-import CUHA.homepage.model.User;
-import CUHA.homepage.security.dto.*;
+import CUHA.homepage.security.dto.userDTO.*;
 import CUHA.homepage.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;

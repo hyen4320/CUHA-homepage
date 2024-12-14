@@ -1,5 +1,6 @@
-package CUHA.homepage.security.dto;
+package CUHA.homepage.security.dto.userDTO;
 
+import CUHA.homepage.model.Gender;
 import lombok.*;
 
 @Getter
@@ -7,7 +8,8 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserLoginRequest {
+public class UserjoinRequest {
     private String username;
     private String password;
+    private Gender gender;
 }

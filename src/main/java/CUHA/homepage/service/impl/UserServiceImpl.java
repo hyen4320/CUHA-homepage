@@ -4,7 +4,7 @@ import CUHA.homepage.model.Gender;
 import CUHA.homepage.model.User;
 import CUHA.homepage.model.UserRole;
 import CUHA.homepage.repository.UserRepository;
-import CUHA.homepage.security.dto.*;
+import CUHA.homepage.security.dto.userDTO.*;
 import CUHA.homepage.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Stream;
 
 @Service
 @Slf4j

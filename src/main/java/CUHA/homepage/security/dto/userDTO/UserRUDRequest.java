@@ -1,4 +1,4 @@
-package CUHA.homepage.security.dto;
+package CUHA.homepage.security.dto.userDTO;
 
 import lombok.*;
 

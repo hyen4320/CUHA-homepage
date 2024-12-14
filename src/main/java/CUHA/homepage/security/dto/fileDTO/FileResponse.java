@@ -1,4 +1,4 @@
-package CUHA.homepage.security.dto;
+package CUHA.homepage.security.dto.fileDTO;
 
 import lombok.*;
 
@@ -8,5 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileResponse {
-    String message;
+    private String message;
 }

@@ -1,13 +1,17 @@
 package CUHA.homepage.service;
 
 import CUHA.homepage.model.Board;
+import CUHA.homepage.security.dto.boardDTO.BoardRequest;
+import CUHA.homepage.security.dto.boardDTO.BoardResponse;
+import CUHA.homepage.security.dto.boardDTO.BoardmessageResponse;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
 
 public interface BoardService {
-    void addBoard(Board board);
-    Board getBoard(Long id);
+    BoardmessageResponse addBoard(HttpServletRequest request, BoardRequest board);
+    BoardResponse getBoard(Long id);
     void deleteBoard(Long id);
-    void updateBoard(Board board);
-    List<Board> getBoards();
+    BoardmessageResponse updateBoard(Board board);
+    List<BoardResponse> getBoards();
 }

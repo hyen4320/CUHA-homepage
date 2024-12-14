@@ -1,14 +1,12 @@
 package CUHA.homepage.controller;
 
-import CUHA.homepage.model.User;
-import CUHA.homepage.security.dto.UserFindResponse;
-import CUHA.homepage.security.dto.UserRUDRequest;
-import CUHA.homepage.security.dto.UserRUDResponse;
-import CUHA.homepage.security.dto.UserUpdateRequest;
+import CUHA.homepage.security.dto.userDTO.UserFindResponse;
+import CUHA.homepage.security.dto.userDTO.UserRUDRequest;
+import CUHA.homepage.security.dto.userDTO.UserRUDResponse;
+import CUHA.homepage.security.dto.userDTO.UserUpdateRequest;
 import CUHA.homepage.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

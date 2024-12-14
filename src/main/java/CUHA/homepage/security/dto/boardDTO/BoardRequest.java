@@ -1,4 +1,4 @@
-package CUHA.homepage.security.dto;
+package CUHA.homepage.security.dto.boardDTO;
 
 import CUHA.homepage.model.User;
 import lombok.*;
@@ -9,7 +9,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardRequest {
-    private User author;
+    private Long author_id;
     private String title;
     private String content;
 

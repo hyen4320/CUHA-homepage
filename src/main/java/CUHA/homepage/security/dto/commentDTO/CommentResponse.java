@@ -1,4 +1,4 @@
-package CUHA.homepage.security.dto;
+package CUHA.homepage.security.dto.commentDTO;
 
 import CUHA.homepage.model.User;
 import lombok.*;
@@ -8,8 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BoardResponse {
+public class CommentResponse {
     private User author;
-    private String title;
-    private String content;
+    private String comment;
 }

@@ -1,10 +1,8 @@
-package CUHA.homepage.security.dto;
+package CUHA.homepage.security.dto.fileDTO;
 
 import CUHA.homepage.model.Board;
 import CUHA.homepage.model.Exam;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
 
 import java.util.UUID;
 

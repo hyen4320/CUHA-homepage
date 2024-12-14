@@ -1,9 +1,7 @@
-package CUHA.homepage.security.dto;
+package CUHA.homepage.security.dto.commentDTO;
 
 import CUHA.homepage.model.Board;
 import CUHA.homepage.model.User;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.*;
 
 @Getter
