@@ -22,7 +22,6 @@ public class UserController {
         UserLoginResponse loginUser=userService.loginUser(user);
         if(loginUser.isSuccess()==true){
             request.getSession().setAttribute("user", user.getUsername());
-            System.out.println(request.getSession().getAttribute("user"));
             //session이름 jsessionid를 사용함
             return loginUser;
         }

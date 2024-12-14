@@ -3,16 +3,15 @@ package CUHA.homepage.service.impl;
 import CUHA.homepage.model.Board;
 import CUHA.homepage.repository.BoardRepository;
 import CUHA.homepage.repository.UserRepository;
-import CUHA.homepage.security.dto.boardDTO.BoardRequest;
-import CUHA.homepage.security.dto.boardDTO.BoardResponse;
-import CUHA.homepage.security.dto.boardDTO.BoardmessageResponse;
+import CUHA.homepage.security.dto.boardDTO.*;
 import CUHA.homepage.service.BoardService;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -23,13 +22,11 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     public BoardmessageResponse addBoard(HttpServletRequest request, BoardRequest board) {
-        HttpSession session = request.getSession();
-
-
         Board saveboard = Board.builder()
                 .title(board.getTitle())
                 .content(board.getContent())
                 .author(userRepository.findByUsername(request.getSession().getAttribute("user").toString()).get())
+                .created_at(LocalDateTime.now())
                 .build();
         boardRepository.save(saveboard);
         return BoardmessageResponse.builder()
@@ -48,13 +45,33 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public void deleteBoard(Long id) {
-
+    public BoardmessageResponse deleteBoard(BoardDeleteRequest boardDeleteRequest, HttpServletRequest request) {
+        Optional<Board> board=boardRepository.findById(boardDeleteRequest.getId());
+        if(!board.isPresent()) {
+            return BoardmessageResponse.builder().message("존재하지 않는 게시물입니다.").build();
+        }
+        Board deleteBoard=board.get();
+        if(!request.getSession().getAttribute("user").equals(deleteBoard.getAuthor().getUsername())) {
+            return BoardmessageResponse.builder().message("본인의 게시물만 삭제가 가능합니다.").build();
+        }
+        boardRepository.deleteById(deleteBoard.getId());
+        return BoardmessageResponse.builder().message("삭제되었습니다.").build();
     }
 
     @Override
-    public BoardmessageResponse updateBoard(Board board) {
-        return null;
+    public BoardmessageResponse updateBoard(BoardFindRequest boardFindRequest, HttpServletRequest request) {
+        Optional<Board> board=boardRepository.findById(boardFindRequest.getId());
+        if(!board.isPresent()) {
+            return BoardmessageResponse.builder().message("존재하지 않는 게시물입니다.").build();
+        }
+        Board updateBoard=board.get();
+        if(!request.getSession().getAttribute("user").equals(updateBoard.getAuthor().getUsername())) {
+            return BoardmessageResponse.builder().message("본인의 게시물만 수정이 가능합니다.").build();
+        }
+        updateBoard.setTitle(boardFindRequest.getTitle());
+        updateBoard.setContent(boardFindRequest.getContent());
+        boardRepository.save(updateBoard);
+        return BoardmessageResponse.builder().message("수정되었습니다.").build();
     }
 
     @Override

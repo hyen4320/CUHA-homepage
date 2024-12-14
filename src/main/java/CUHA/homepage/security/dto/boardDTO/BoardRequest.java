@@ -9,7 +9,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardRequest {
-    private Long author_id;
     private String title;
     private String content;
 

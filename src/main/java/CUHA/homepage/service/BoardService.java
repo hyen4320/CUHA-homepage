@@ -1,9 +1,6 @@
 package CUHA.homepage.service;
 
-import CUHA.homepage.model.Board;
-import CUHA.homepage.security.dto.boardDTO.BoardRequest;
-import CUHA.homepage.security.dto.boardDTO.BoardResponse;
-import CUHA.homepage.security.dto.boardDTO.BoardmessageResponse;
+import CUHA.homepage.security.dto.boardDTO.*;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.util.List;
@@ -11,7 +8,7 @@ import java.util.List;
 public interface BoardService {
     BoardmessageResponse addBoard(HttpServletRequest request, BoardRequest board);
     BoardResponse getBoard(Long id);
-    void deleteBoard(Long id);
-    BoardmessageResponse updateBoard(Board board);
+    BoardmessageResponse deleteBoard(BoardDeleteRequest boardDeleteRequest, HttpServletRequest request);
+    BoardmessageResponse updateBoard(BoardFindRequest boardFindRequest, HttpServletRequest request);
     List<BoardResponse> getBoards();
 }
