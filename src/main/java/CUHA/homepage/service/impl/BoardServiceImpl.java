@@ -14,4 +14,28 @@ import java.util.List;
 public class BoardServiceImpl implements BoardService {
 
 
+    @Override
+    public void addBoard(Board board) {
+
+    }
+
+    @Override
+    public Board getBoard(Long id) {
+        return null;
+    }
+
+    @Override
+    public void deleteBoard(Long id) {
+
+    }
+
+    @Override
+    public void updateBoard(Board board) {
+
+    }
+
+    @Override
+    public List<Board> getBoards() {
+        return List.of();
+    }
 }

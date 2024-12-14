@@ -14,6 +14,5 @@ import java.security.Timestamp;
 public class UserjoinRequest {
     private String username;
     private String password;
-    private int score;
     private Gender gender;
 }

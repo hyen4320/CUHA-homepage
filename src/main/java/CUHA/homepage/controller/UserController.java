@@ -31,9 +31,9 @@ public class UserController {
             return loginUser;
         }
     }
-    @PutMapping("/set/gender")
-    public User setGender(@RequestBody UserRUDRequest username) {
-        return null;
+    @PutMapping("/set/userInfo")
+    public UserRUDResponse updateuser(@RequestBody UserjoinRequest username){
+        return userService.updateUser(username);
     }
 
     @GetMapping("/gender")
