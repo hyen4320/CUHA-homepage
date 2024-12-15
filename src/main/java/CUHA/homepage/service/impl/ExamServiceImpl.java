@@ -33,6 +33,7 @@ public class ExamServiceImpl implements ExamService {
                 .score(examRequest.getScore())
                 .answer(examRequest.getAnswer())
                 .author(userRepository.findByUsername(request.getSession().getAttribute("user").toString()).get())
+                .category(examRequest.getCategory())
                 .created_at(LocalDateTime.now())
                 .build();
         examRepository.save(exam);
@@ -43,7 +44,9 @@ public class ExamServiceImpl implements ExamService {
     public List<ExamFindResponse> getExams() {
 
         return examRepository.findAll().stream().map(x->ExamFindResponse.builder()
-                .title(x.getTitle()).author(x.getAuthor().getUsername()).content(x.getContent())
+                .title(x.getTitle())
+                .author(x.getAuthor().getUsername())
+                .content(x.getContent())
                 .score(x.getScore()).build()).toList();
     }
 
@@ -60,6 +63,7 @@ public class ExamServiceImpl implements ExamService {
                 .content(getExam.getContent())
                 .author(getExam.getAuthor().getUsername())
                 .score(getExam.getScore())
+                .category(getExam.getCategory())
                 .build();
     }
 
@@ -95,6 +99,7 @@ public class ExamServiceImpl implements ExamService {
         updateExam.setContent(examUpdateRequeest.getContent());
         updateExam.setScore(examUpdateRequeest.getScore());
         updateExam.setAnswer(examUpdateRequeest.getAnswer());
+        updateExam.setCategory(examUpdateRequeest.getCategory());
         examRepository.save(updateExam);
         return ExamMessageResponse.builder().message("수정되었습니다.").build();
     }

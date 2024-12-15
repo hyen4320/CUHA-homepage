@@ -1,5 +1,6 @@
 package CUHA.homepage.security.dto.examDTO;
 
+import CUHA.homepage.model.Category;
 import CUHA.homepage.model.User;
 import lombok.*;
 
@@ -13,4 +14,5 @@ public class ExamFindResponse {
     private String content;
     private String author;
     private Long score;
+    private Category category;
 }

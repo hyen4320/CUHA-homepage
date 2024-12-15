@@ -17,13 +17,16 @@ public class File {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String fileloc;
     private String fileExtension;
     private UUID uuid;
+    private String fileLoc;
+    private String originalFileName;
     @ManyToOne
-    private Board board_id;
+    @JoinColumn(name = "board_id")
+    private Board board;
     @ManyToOne
-    private Exam exam_id;
+    @JoinColumn(name="exam_id")
+    private Exam exam;
     @CreatedDate
     private LocalDateTime created_at;
 }

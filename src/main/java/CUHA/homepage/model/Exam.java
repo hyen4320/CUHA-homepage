@@ -19,6 +19,8 @@ public class Exam {
     private Long id;
     private String title;
     private String content;
+    @Enumerated(EnumType.STRING)
+    private Category category;
     @ManyToOne
     @JoinColumn(name = "author_id")
     private User author;
