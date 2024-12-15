@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface FileRepository extends JpaRepository<File, Long> {
-    Optional<List<File>> findAllByBoard(Long board);
-    Optional<List<File>> findAllByExam(Long exam);
-    Optional<File> findByBoard(Long board);
-    Optional<File> findByExam(Long exam);
+    Optional<List<File>> findAllByBoard_Id(Long boardId);
+    Optional<List<File>> findAllByExam_Id(Long examId);
+    Optional<File> findByBoard_Id(Long boardId);
+    Optional<File> findByExam_Id(Long examId);
+
     Optional<File> findByoriginalFileName(String originalFileName);
 }

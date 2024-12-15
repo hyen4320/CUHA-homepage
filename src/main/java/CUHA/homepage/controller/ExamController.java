@@ -4,10 +4,7 @@ import CUHA.homepage.security.dto.boardDTO.BoardFindRequest;
 import CUHA.homepage.security.dto.boardDTO.BoardRequest;
 import CUHA.homepage.security.dto.boardDTO.BoardResponse;
 import CUHA.homepage.security.dto.boardDTO.BoardmessageResponse;
-import CUHA.homepage.security.dto.examDTO.ExamFindResponse;
-import CUHA.homepage.security.dto.examDTO.ExamMessageResponse;
-import CUHA.homepage.security.dto.examDTO.ExamRequest;
-import CUHA.homepage.security.dto.examDTO.ExamUpdateRequeest;
+import CUHA.homepage.security.dto.examDTO.*;
 import CUHA.homepage.service.BoardService;
 import CUHA.homepage.service.ExamService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,6 +41,11 @@ public class ExamController {
     @DeleteMapping("/deleteboard")
     public ExamMessageResponse deleteExam(@RequestParam Long id, HttpServletRequest request) {
         return examService.deleteExam(id,request);
+    }
+
+    @PostMapping("/checkAnswer")
+    public ExamMessageResponse checkAnswer(@RequestBody ExamAnswerRequest answer, HttpServletRequest request) {
+        return examService.checkAnswer(answer,request);
     }
 
 }

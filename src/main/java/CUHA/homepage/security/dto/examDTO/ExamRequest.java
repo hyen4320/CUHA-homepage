@@ -12,7 +12,7 @@ import lombok.*;
 public class ExamRequest {
     private String title;
     private String content;
-    private User author;
+    private String author;
     private String answer;
     private Long score;
     private Category category;

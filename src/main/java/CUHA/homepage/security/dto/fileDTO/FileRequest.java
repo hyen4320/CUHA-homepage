@@ -12,6 +12,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileRequest {
+    private Long id;
     private Long board_id;
     private Long exam_id;
 }

@@ -8,10 +8,13 @@ import CUHA.homepage.repository.FileRepository;
 import CUHA.homepage.security.dto.fileDTO.*;
 import CUHA.homepage.service.FileService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import org.webjars.NotFoundException;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -63,30 +66,36 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public List<GeneralFileResponse> getFile(FileRequest fileRequest) {
-        Optional<List<File>> files=fileRepository.findAllByBoard(fileRequest.getBoard_id());
+        Optional<List<File>> files=fileRepository.findAllByBoard_Id(fileRequest.getBoard_id());
         if(!files.isPresent()){
             throw new NotFoundException("해당 게시글이 없습니다.");
         }
         return files.get().stream().map(x->GeneralFileResponse.builder().
-                filename(x.getOriginalFileName()).build()).toList();
+                filename(x.getOriginalFileName()).id(x.getId()).build()).toList();
 
 
     }
 
     @Override
-    public java.io.File downloadFile(ExamFileRequest fileRequest) {
-        Optional<File> file=fileRepository.findByoriginalFileName(fileRequest.getFileName());
-        Path downPath = Paths.get("src", "main", "resources", "static", "Files");
-        if(!file.isPresent()){
-            throw new NotFoundException("그런 파일 없습니다.");
+    public InputStreamResource downloadFile(Long id) throws FileNotFoundException {
+        Optional<File> findfile=fileRepository.findById(id);
+        if(!findfile.isPresent()){
+            throw new NotFoundException("다운로드 가능한 파일이 없습니다.");
         }
-        File downloadFile = new File();
-        return null;
+        String fileLocation = findfile.get().getFileLoc();
+        java.io.File fileToDownload = new java.io.File(fileLocation);
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(fileToDownload));
+        if (!fileToDownload.exists()) {
+            throw new NotFoundException("파일 경로가 존재하지 않습니다: " + fileLocation);
+        }
+
+
+        return resource;
     }
 
     @Override
     public FileResponse saveExamFIle(MultipartFile file, FileRequest filerequest) throws IOException {
-        Category category=fileRepository.findByExam(filerequest.getExam_id()).get().getExam().getCategory();
+        Category category=examRepository.findById(filerequest.getExam_id()).get().getCategory();
         Path downPath = Paths.get("src", "main", "resources", "static", "CTF", category.name());
         if(file.isEmpty()){
             throw new NotFoundException("파일이 존재하지 않습니다.");
@@ -118,17 +127,22 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public List<ExamFileResponse> getExamFIle(FileRequest fileRequest) {
-        Optional<List<File>> files=fileRepository.findAllByExam(fileRequest.getExam_id());
+        Optional<List<File>> files=fileRepository.findAllByExam_Id(fileRequest.getExam_id());
         if(!files.isPresent()){
             throw new NotFoundException("해당 게시글이 없습니다.");
         }
         return files.get().stream().map(x->ExamFileResponse.builder().
-                fileName(x.getOriginalFileName()).build()).toList();
+                fileName(x.getOriginalFileName()).id(x.getId()).build()).toList();
 
     }
 
     @Override
     public FileResponse deleteFile(FileRequest request) {
         return null;
+    }
+
+    @Override
+    public FileResponse findFilename(Long id) {
+        return FileResponse.builder().message(fileRepository.findById(id).get().getOriginalFileName()).build();
     }
 }

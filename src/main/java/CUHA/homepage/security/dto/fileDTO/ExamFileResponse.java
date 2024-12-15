@@ -8,5 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExamFileResponse {
+    private Long id;
     private String fileName;
 }
