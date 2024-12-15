@@ -35,8 +35,8 @@ public class BoardController {
     }
 
     @DeleteMapping("/deleteboard")
-    public BoardmessageResponse deleteBoard(@RequestBody BoardDeleteRequest boardDeleteRequest, HttpServletRequest request) {
-        return boardService.deleteBoard(boardDeleteRequest,request);
+    public BoardmessageResponse deleteBoard(@RequestParam Long id, HttpServletRequest request) {
+        return boardService.deleteBoard(id,request);
     }
 
 

@@ -45,8 +45,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    public BoardmessageResponse deleteBoard(BoardDeleteRequest boardDeleteRequest, HttpServletRequest request) {
-        Optional<Board> board=boardRepository.findById(boardDeleteRequest.getId());
+    public BoardmessageResponse deleteBoard(Long id, HttpServletRequest request) {
+        Optional<Board> board=boardRepository.findById(id);
         if(!board.isPresent()) {
             return BoardmessageResponse.builder().message("존재하지 않는 게시물입니다.").build();
         }
