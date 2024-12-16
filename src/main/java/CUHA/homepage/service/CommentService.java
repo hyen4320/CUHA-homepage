@@ -13,7 +13,7 @@ public interface CommentService {
     CommentMessageResponse addComment(CommentRequest commentRequest, HttpServletRequest resquest);
     List<CommentResponse> getAllComments();
     List<CommentResponse> getCommentById(Long id);
-    CommentMessageResponse deleteComment(CommentRequest commentRequest);
-    CommentMessageResponse updateComment(CommentRequest commentRequest);
+    CommentMessageResponse deleteComment(Long id,HttpServletRequest resquest);
+    CommentMessageResponse updateComment(Long id,CommentRequest commentRequest,HttpServletRequest resquest);
 
 }
