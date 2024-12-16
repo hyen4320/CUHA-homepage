@@ -14,31 +14,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/exam")
 @RequiredArgsConstructor
 public class ExamController {
     private final ExamService examService;
-    @PostMapping("/post")
+
+    @PostMapping("/exam")
     public ExamMessageResponse postExam(@RequestBody ExamRequest examRequest, HttpServletRequest request) {
         return examService.addExam(examRequest,request);
     }
 
-    @GetMapping("/getBoard")
+    @GetMapping("/exam")
     public ExamFindResponse getExam(@RequestParam Long id) {
         return examService.getExam(id);
     }
 
-    @GetMapping("/getBoards")
+    @GetMapping("/exams")
     public List<ExamFindResponse> getExam() {
         return examService.getExams();
     }
 
-    @PutMapping("/updateBoard")
+    @PutMapping("/exam")
     public ExamMessageResponse updateExam(@RequestBody ExamUpdateRequeest examUpdateRequeest, HttpServletRequest request) {
         return examService.updateExam(examUpdateRequeest,request);
     }
 
-    @DeleteMapping("/deleteboard")
+    @DeleteMapping("/exam")
     public ExamMessageResponse deleteExam(@RequestParam Long id, HttpServletRequest request) {
         return examService.deleteExam(id,request);
     }

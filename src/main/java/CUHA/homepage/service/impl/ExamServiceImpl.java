@@ -17,6 +17,7 @@ import org.webjars.NotFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -83,8 +84,11 @@ public class ExamServiceImpl implements ExamService {
             throw new NotFoundException("로그인 후 다시 이용해주세요.");
         }
         User findUser=findUserOp.get();
-        if(solvedExamRepository.findByUsername(findUser.getUsername()).get().isSolved()){
-            throw new IllegalArgumentException("이미 푼 문제입니다.");
+        Optional<SolvedExam> solvedExam=solvedExamRepository.findByUsername(findUser);
+        if(solvedExam.isPresent()){
+            if(solvedExam.get().isSolved()){
+                return ExamMessageResponse.builder().message("이미 푼 문제입니다.").build();
+            }
         }
         Exam exam=findexam.get();
         if(exam.getAnswer().equals(examAnswerRequest.getAnswer())){

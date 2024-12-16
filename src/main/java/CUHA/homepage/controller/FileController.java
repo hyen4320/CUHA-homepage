@@ -23,7 +23,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/file")
+
 @RequiredArgsConstructor
 public class FileController {
     private final FileService fileService;
@@ -33,16 +33,16 @@ public class FileController {
         return ResponseEntity.ok(fileService.saveFile(file,fileRequest));
 
     }
-    @PostMapping(value = "/Examfilesave",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/examfilesave",consumes = MediaType.MULTIPART_FORM_DATA_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FileResponse>addExamFile(@RequestPart MultipartFile file, FileRequest fileRequest) throws IOException {
 
         return ResponseEntity.ok(fileService.saveExamFIle(file,fileRequest));
     }
-    @GetMapping("/ExamFile")
+    @GetMapping("/examfile")
     public ResponseEntity<List<ExamFileResponse>>fildExamFile(@RequestParam FileRequest fileId) throws IOException {
         return ResponseEntity.ok(fileService.getExamFIle(fileId));
     }
-    @GetMapping("generalFIle")
+    @GetMapping("generalfile")
     public ResponseEntity<List<GeneralFileResponse>>findExamFile(@RequestParam FileRequest fileId) throws IOException {
         return ResponseEntity.ok(fileService.getFile(fileId));
     }

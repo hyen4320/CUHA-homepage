@@ -13,25 +13,34 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/comment")
 @RequiredArgsConstructor
 public class CommentController {
 
     private final CommentService commentService;
 
-    @PostMapping
+    @PostMapping("/comment")
     public CommentMessageResponse addComment(@RequestBody CommentRequest commentRequest, HttpServletRequest request) {
         return commentService.addComment(commentRequest,request);
     }
 
-    @GetMapping("/getallcomment")
+    @GetMapping("/comments")
     public List<CommentResponse> getAllComments() {
         return commentService.getAllComments();
     }
 
-    @GetMapping("/getCommentbyboard")
+    @GetMapping("/comment")
     public List<CommentResponse> getCommentByBoard(@RequestParam Long id) {
         return commentService.getCommentById(id);
+    }
+
+    @PutMapping("/comment")
+    public CommentMessageResponse updateComment(@RequestBody CommentRequest commentRequest, HttpServletRequest request) {
+        return null;
+    }
+
+    @DeleteMapping("/comment")
+    public CommentMessageResponse deleteComment(@RequestBody CommentRequest commentRequest, HttpServletRequest request) {
+        return null;
     }
 
 
