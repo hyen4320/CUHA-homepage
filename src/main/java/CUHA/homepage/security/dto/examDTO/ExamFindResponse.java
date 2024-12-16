@@ -10,6 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ExamFindResponse {
+    private Long id;
     private String title;
     private String content;
     private String author;

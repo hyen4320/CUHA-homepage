@@ -10,7 +10,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CommentRequest {
-    private Board board_id;
-    private User author;
+    private Long board_id;
     private String comment;
 }

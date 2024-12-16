@@ -2,8 +2,10 @@ package CUHA.homepage.service.impl;
 
 import CUHA.homepage.model.Board;
 import CUHA.homepage.model.Exam;
+import CUHA.homepage.model.SolvedExam;
 import CUHA.homepage.model.User;
 import CUHA.homepage.repository.ExamRepository;
+import CUHA.homepage.repository.SolvedExamRepository;
 import CUHA.homepage.repository.UserRepository;
 import CUHA.homepage.security.dto.boardDTO.BoardmessageResponse;
 import CUHA.homepage.security.dto.examDTO.*;
@@ -23,10 +25,11 @@ public class ExamServiceImpl implements ExamService {
 
     private final ExamRepository examRepository;
     private final UserRepository userRepository;
+    private final SolvedExamRepository solvedExamRepository;
 
     @Override
     public ExamMessageResponse addExam(ExamRequest examRequest,HttpServletRequest request) {
-        ;
+
         Exam exam = Exam.builder()
                 .title(examRequest.getTitle())
                 .content(examRequest.getContent())
@@ -44,6 +47,7 @@ public class ExamServiceImpl implements ExamService {
     public List<ExamFindResponse> getExams() {
 
         return examRepository.findAll().stream().map(x->ExamFindResponse.builder()
+                .id(x.getId())
                 .title(x.getTitle())
                 .author(x.getAuthor().getUsername())
                 .content(x.getContent())
@@ -59,6 +63,7 @@ public class ExamServiceImpl implements ExamService {
         }
         Exam getExam=exam.get();
         return ExamFindResponse.builder()
+                .id(getExam.getId())
                 .title(getExam.getTitle())
                 .content(getExam.getContent())
                 .author(getExam.getAuthor().getUsername())
@@ -70,14 +75,22 @@ public class ExamServiceImpl implements ExamService {
     @Override
     public ExamMessageResponse checkAnswer(ExamAnswerRequest examAnswerRequest, HttpServletRequest request) {
         Optional<Exam> findexam =examRepository.findById(examAnswerRequest.getId());
+        Optional<User> findUserOp=userRepository.findByUsername(request.getSession().getAttribute("user").toString());
         if(!findexam.isPresent()){
             throw new NotFoundException("해당 문제가 존재하지 않습니다.");
         }
+        if(!findUserOp.isPresent()){
+            throw new NotFoundException("로그인 후 다시 이용해주세요.");
+        }
+        User findUser=findUserOp.get();
+        if(solvedExamRepository.findByUsername(findUser.getUsername()).get().isSolved()){
+            throw new IllegalArgumentException("이미 푼 문제입니다.");
+        }
         Exam exam=findexam.get();
         if(exam.getAnswer().equals(examAnswerRequest.getAnswer())){
-            User findUser=userRepository.findByUsername(request.getSession().getAttribute("user").toString()).get();
             findUser.setScore(findUser.getScore()+exam.getScore());
             userRepository.save(findUser);
+            solvedExamRepository.save(SolvedExam.builder().username(findUser).exam(findexam.get()).solved(true).build());
             return ExamMessageResponse.builder().message("정답입니다.").build();
         }
         else{
