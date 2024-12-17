@@ -5,6 +5,7 @@ import CUHA.homepage.security.dto.userDTO.*;
 import CUHA.homepage.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,12 +14,15 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final UserService userService;
+    private final PasswordEncoder passwordEncoder;
     @PostMapping("/join")
     public UserJoinResponse join(@RequestBody UserjoinRequest user) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userService.addUser(user);
     }
     @PostMapping("/login")
     public UserLoginResponse login(@RequestBody UserLoginRequest user, HttpServletRequest request) {
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         UserLoginResponse loginUser=userService.loginUser(user);
         if(loginUser.isSuccess()==true){
             request.getSession().setAttribute("user", user.getUsername());
@@ -31,6 +35,7 @@ public class UserController {
     }
     @PutMapping("/set/userInfo")
     public UserRUDResponse updateuser(@RequestBody UserjoinRequest username){
+        username.setPassword(passwordEncoder.encode(username.getPassword()));
         return userService.updateUser(username);
     }
 
