@@ -58,5 +58,4 @@ public class FileController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + encodedFilename + "\"")
                 .body(fileService.downloadFile(id));
     }
-
 }
