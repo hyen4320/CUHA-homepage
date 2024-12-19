@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Override
     public UserJoinResponse addUser(UserjoinRequest user) {
@@ -28,9 +30,10 @@ public class UserServiceImpl implements UserService {
         if (findUser.isPresent()) {
             return UserJoinResponse.builder().message("이미 사용중인 이름입니다.").build();
         }
+
         User addUser = User.builder()
                 .username(user.getUsername())
-                .password(user.getPassword())
+                .password(bCryptPasswordEncoder.encode(user.getPassword()))
                 .userRole(UserRole.user)
                 .isActive(true)
                 .gender(user.getGender())
@@ -88,7 +91,7 @@ public class UserServiceImpl implements UserService {
                     .build();
         }
         User userInfo= loginUser.get();
-        if(userInfo.getPassword().equals(user.getPassword())&& userInfo.getUsername().equals(user.getUsername())){
+        if(bCryptPasswordEncoder.matches(user.getPassword(), userInfo.getPassword()) && userInfo.getUsername().equals(user.getUsername())){
             return UserLoginResponse.builder()
                     .message("로그인 성공")
                     .success(true)
