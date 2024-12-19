@@ -17,12 +17,12 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
     @PostMapping("/join")
     public UserJoinResponse join(@RequestBody UserjoinRequest user) {
-        user.setPassword(user.getPassword());
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userService.addUser(user);
     }
     @PostMapping("/login")
     public UserLoginResponse login(@RequestBody UserLoginRequest user, HttpServletRequest request) {
-        user.setPassword(user.getPassword());
+
         UserLoginResponse loginUser=userService.loginUser(user);
         if(loginUser.isSuccess()==true){
             request.getSession().setAttribute("user", user.getUsername());

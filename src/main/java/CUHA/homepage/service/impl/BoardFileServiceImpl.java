@@ -38,7 +38,7 @@ public class BoardFileServiceImpl implements BoardFileService {
     private final ExamFileRepository examFileRepository;
 
     @Override
-    public FileResponse saveFile(MultipartFile file, FileRequest filerequest) throws IOException {
+    public FileResponse saveFile(MultipartFile file, BoardFileSaveRequest filerequest) throws IOException {
         Path downPath = Paths.get("src", "main", "resources", "static", "Files");
         if(file.isEmpty()){
             throw new NotFoundException("파일이 존재하지 않습니다.");
@@ -69,8 +69,8 @@ public class BoardFileServiceImpl implements BoardFileService {
     }
 
     @Override
-    public List<GeneralFileResponse> getFile(FileRequest fileRequest) {
-        Optional<List<BoardFile>> files= boardFileRepository.findAllByBoard_Id(fileRequest.getBoard_id());
+    public List<GeneralFileResponse> getFile(BoardFileSaveRequest boardFileSaveRequest) {
+        Optional<List<BoardFile>> files= boardFileRepository.findAllByBoard_Id(boardFileSaveRequest.getBoard_id());
         if(!files.isPresent()){
             throw new NotFoundException("해당 게시글이 없습니다.");
         }
@@ -97,48 +97,48 @@ public class BoardFileServiceImpl implements BoardFileService {
         return resource;
     }
 
-    @Override
-    public FileResponse saveExamFIle(MultipartFile file, FileRequest filerequest) throws IOException {
-        Category category=examRepository.findById(filerequest.getExam_id()).get().getCategory();
-        Path downPath = Paths.get("src", "main", "resources", "static", "CTF", category.name());
-        if(file.isEmpty()){
-            throw new NotFoundException("파일이 존재하지 않습니다.");
-        }
+//    @Override
+//    public FileResponse saveExamFIle(MultipartFile file, BoardFileSaveRequest filerequest) throws IOException {
+//        Category category=examRepository.findById(filerequest.getExam_id()).get().getCategory();
+//        Path downPath = Paths.get("src", "main", "resources", "static", "CTF", category.name());
+//        if(file.isEmpty()){
+//            throw new NotFoundException("파일이 존재하지 않습니다.");
+//        }
+//
+//        String originalFileName = file.getOriginalFilename();
+//        String extension = Optional.ofNullable(originalFileName)
+//                .filter(f -> f.contains("."))
+//                .map(f -> f.substring(originalFileName.lastIndexOf(".") + 1))
+//                .orElseThrow(() -> new IllegalArgumentException("파일 확장자를 찾을 수 없습니다."));
+//
+//        UUID uuid = UUID.randomUUID();
+//        String fileName = uuid + "." + extension;
+//
+//        Path filePath = downPath.resolve(fileName);
+//        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+//        boardFileRepository.save(BoardFile.builder()
+//                .fileExtension(extension)
+//                .exam(examRepository.findById(filerequest.getExam_id()).get())
+//                .uuid(uuid)
+//                .originalFileName(Normalizer.normalize(file.getOriginalFilename(),Normalizer.Form.NFC))
+//                //원래는 NFD방식으로 이름을 가져와 한->ㅎㅏㄴ이렇게 되어서 정규화 해줌
+//                .fileLoc(filePath.toString())
+//                .created_at(LocalDateTime.now())
+//                .build());
+//
+//        return FileResponse.builder().message("저장에 성공했습니다.").build();
+//    }
 
-        String originalFileName = file.getOriginalFilename();
-        String extension = Optional.ofNullable(originalFileName)
-                .filter(f -> f.contains("."))
-                .map(f -> f.substring(originalFileName.lastIndexOf(".") + 1))
-                .orElseThrow(() -> new IllegalArgumentException("파일 확장자를 찾을 수 없습니다."));
-
-        UUID uuid = UUID.randomUUID();
-        String fileName = uuid + "." + extension;
-
-        Path filePath = downPath.resolve(fileName);
-        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        boardFileRepository.save(BoardFile.builder()
-                .fileExtension(extension)
-                .exam(examRepository.findById(filerequest.getExam_id()).get())
-                .uuid(uuid)
-                .originalFileName(Normalizer.normalize(file.getOriginalFilename(),Normalizer.Form.NFC))
-                //원래는 NFD방식으로 이름을 가져와 한->ㅎㅏㄴ이렇게 되어서 정규화 해줌
-                .fileLoc(filePath.toString())
-                .created_at(LocalDateTime.now())
-                .build());
-
-        return FileResponse.builder().message("저장에 성공했습니다.").build();
-    }
-
-    @Override
-    public List<ExamFileResponse> getExamFIle(FileRequest fileRequest) {
-        Optional<List<ExamFile>> files= examFileRepository.findAllByExam_Id(fileRequest.getExam_id());
-        if(!files.isPresent()){
-            throw new NotFoundException("해당 게시글이 없습니다.");
-        }
-        return files.get().stream().map(x->ExamFileResponse.builder().
-                fileName(x.getOriginalFileName()).id(x.getId()).build()).toList();
-
-    }
+//    @Override
+//    public List<ExamFileResponse> getExamFIle(ExamFileSaveRequest examFileSaveRequest) {
+//        Optional<List<ExamFile>> files= examFileRepository.findAllByExam_Id(examFileSaveRequest.getExam_id());
+//        if(!files.isPresent()){
+//            throw new NotFoundException("해당 게시글이 없습니다.");
+//        }
+//        return files.get().stream().map(x->ExamFileResponse.builder().
+//                fileName(x.getOriginalFileName()).id(x.getId()).build()).toList();
+//
+//    }
 
     @Override
     public FileResponse deleteFile(List<Long> id) {

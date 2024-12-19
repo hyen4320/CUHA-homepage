@@ -9,11 +9,9 @@ import java.io.IOException;
 import java.util.List;
 
 public interface BoardFileService {
-    FileResponse saveFile(MultipartFile file,FileRequest request) throws IOException;
-    List<GeneralFileResponse> getFile(FileRequest request);
+    FileResponse saveFile(MultipartFile file, BoardFileSaveRequest request) throws IOException;
+    List<GeneralFileResponse> getFile(BoardFileSaveRequest request);
     InputStreamResource downloadFile(Long id) throws FileNotFoundException;
-    FileResponse saveExamFIle(MultipartFile file,FileRequest request) throws IOException;
-    List<ExamFileResponse> getExamFIle(FileRequest request);
     FileResponse deleteFile(List<Long> ids);
     FileResponse findFilename(Long id);
 }

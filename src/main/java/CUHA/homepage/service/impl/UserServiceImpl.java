@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,6 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserJoinResponse addUser(UserjoinRequest user) {
@@ -88,7 +90,7 @@ public class UserServiceImpl implements UserService {
                     .build();
         }
         User userInfo= loginUser.get();
-        if(userInfo.getPassword().equals(user.getPassword())&& userInfo.getUsername().equals(user.getUsername())){
+        if(passwordEncoder.matches(user.getPassword(),userInfo.getPassword())&& userInfo.getUsername().equals(user.getUsername())){
             return UserLoginResponse.builder()
                     .message("로그인 성공")
                     .success(true)

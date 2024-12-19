@@ -1,16 +1,13 @@
 package CUHA.homepage.service.impl;
 
-import CUHA.homepage.model.BoardFile;
 import CUHA.homepage.model.Category;
 import CUHA.homepage.model.ExamFile;
 import CUHA.homepage.repository.BoardFileRepository;
-import CUHA.homepage.repository.BoardRepository;
 import CUHA.homepage.repository.ExamFileRepository;
 import CUHA.homepage.repository.ExamRepository;
 import CUHA.homepage.security.dto.fileDTO.ExamFileResponse;
-import CUHA.homepage.security.dto.fileDTO.FileRequest;
+import CUHA.homepage.security.dto.fileDTO.ExamFileSaveRequest;
 import CUHA.homepage.security.dto.fileDTO.FileResponse;
-import CUHA.homepage.security.dto.fileDTO.GeneralFileResponse;
 import CUHA.homepage.service.ExamFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
@@ -39,8 +36,8 @@ public class ExamFileServiceImpl implements ExamFileService {
     private final ExamFileRepository examFileRepository;
 
     @Override
-    public FileResponse saveFile(MultipartFile file, FileRequest fileRequest) throws IOException {
-        Category category=examRepository.findById(fileRequest.getExam_id()).get().getCategory();
+    public FileResponse saveFile(MultipartFile file, ExamFileSaveRequest examFileSaveRequest) throws IOException {
+        Category category=examRepository.findById(examFileSaveRequest.getExam_id()).get().getCategory();
         Path downPath = Paths.get("src", "main", "resources", "static", "CTF", category.name());
         if(file.isEmpty()){
             throw new NotFoundException("파일이 존재하지 않습니다.");
@@ -59,7 +56,7 @@ public class ExamFileServiceImpl implements ExamFileService {
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
         examFileRepository.save(ExamFile.builder()
                 .fileExtension(extension)
-                .exam(examRepository.findById(fileRequest.getExam_id()).get())
+                .exam(examRepository.findById(examFileSaveRequest.getExam_id()).get())
                 .uuid(uuid)
                 .originalFileName(Normalizer.normalize(file.getOriginalFilename(),Normalizer.Form.NFC))
                 //원래는 NFD방식으로 이름을 가져와 한->ㅎㅏㄴ이렇게 되어서 정규화 해줌
@@ -71,8 +68,8 @@ public class ExamFileServiceImpl implements ExamFileService {
     }
 
     @Override
-    public List<ExamFileResponse> getFile(FileRequest fileRequest) {
-        Optional<List<ExamFile>> files= examFileRepository.findAllByExam_Id(fileRequest.getExam_id());
+    public List<ExamFileResponse> getFile(ExamFileSaveRequest examFileSaveRequest) {
+        Optional<List<ExamFile>> files= examFileRepository.findAllByExam_Id(examFileSaveRequest.getExam_id());
         if(!files.isPresent()){
             throw new NotFoundException("해당 게시글이 없습니다.");
         }
@@ -102,6 +99,6 @@ public class ExamFileServiceImpl implements ExamFileService {
 
     @Override
     public FileResponse findFilename(Long id) {
-        return FileResponse.builder().message(examFileRepository.findById(id).get().getOriginalFileName()).build();
+        return FileResponse.builder().message(examFileRepository.findByExam_Id(id).get().getOriginalFileName()).build();
     }
 }
