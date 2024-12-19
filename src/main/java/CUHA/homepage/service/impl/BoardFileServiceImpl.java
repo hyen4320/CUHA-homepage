@@ -1,12 +1,14 @@
 package CUHA.homepage.service.impl;
 
 import CUHA.homepage.model.Category;
-import CUHA.homepage.model.File;
+import CUHA.homepage.model.BoardFile;
+import CUHA.homepage.model.ExamFile;
 import CUHA.homepage.repository.BoardRepository;
+import CUHA.homepage.repository.ExamFileRepository;
 import CUHA.homepage.repository.ExamRepository;
-import CUHA.homepage.repository.FileRepository;
+import CUHA.homepage.repository.BoardFileRepository;
 import CUHA.homepage.security.dto.fileDTO.*;
-import CUHA.homepage.service.FileService;
+import CUHA.homepage.service.BoardFileService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
@@ -28,11 +30,13 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
-public class FileServiceImpl implements FileService {
+public class BoardFileServiceImpl implements BoardFileService {
 
-    private final FileRepository fileRepository;
+    private final BoardFileRepository boardFileRepository;
     private final ExamRepository examRepository;
     private final BoardRepository boardRepository;
+    private final ExamFileRepository examFileRepository;
+
     @Override
     public FileResponse saveFile(MultipartFile file, FileRequest filerequest) throws IOException {
         Path downPath = Paths.get("src", "main", "resources", "static", "Files");
@@ -51,7 +55,7 @@ public class FileServiceImpl implements FileService {
 
         Path filePath = downPath.resolve(fileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        fileRepository.save(File.builder()
+        boardFileRepository.save(BoardFile.builder()
                 .fileExtension(extension)
                 .board(boardRepository.findById(filerequest.getBoard_id()).get())
                 .uuid(uuid)
@@ -66,7 +70,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public List<GeneralFileResponse> getFile(FileRequest fileRequest) {
-        Optional<List<File>> files=fileRepository.findAllByBoard_Id(fileRequest.getBoard_id());
+        Optional<List<BoardFile>> files= boardFileRepository.findAllByBoard_Id(fileRequest.getBoard_id());
         if(!files.isPresent()){
             throw new NotFoundException("해당 게시글이 없습니다.");
         }
@@ -78,7 +82,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public InputStreamResource downloadFile(Long id) throws FileNotFoundException {
-        Optional<File> findfile=fileRepository.findById(id);
+        Optional<BoardFile> findfile= boardFileRepository.findById(id);
         if(!findfile.isPresent()){
             throw new NotFoundException("다운로드 가능한 파일이 없습니다.");
         }
@@ -112,7 +116,7 @@ public class FileServiceImpl implements FileService {
 
         Path filePath = downPath.resolve(fileName);
         Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-        fileRepository.save(File.builder()
+        boardFileRepository.save(BoardFile.builder()
                 .fileExtension(extension)
                 .exam(examRepository.findById(filerequest.getExam_id()).get())
                 .uuid(uuid)
@@ -127,7 +131,7 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public List<ExamFileResponse> getExamFIle(FileRequest fileRequest) {
-        Optional<List<File>> files=fileRepository.findAllByExam_Id(fileRequest.getExam_id());
+        Optional<List<ExamFile>> files= examFileRepository.findAllByExam_Id(fileRequest.getExam_id());
         if(!files.isPresent()){
             throw new NotFoundException("해당 게시글이 없습니다.");
         }
@@ -137,12 +141,12 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
-    public FileResponse deleteFile(FileRequest request) {
+    public FileResponse deleteFile(List<Long> id) {
         return null;
     }
 
     @Override
     public FileResponse findFilename(Long id) {
-        return FileResponse.builder().message(fileRepository.findById(id).get().getOriginalFileName()).build();
+        return FileResponse.builder().message(boardFileRepository.findById(id).get().getOriginalFileName()).build();
     }
 }

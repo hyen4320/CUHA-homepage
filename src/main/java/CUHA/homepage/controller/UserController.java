@@ -17,12 +17,12 @@ public class UserController {
     private final PasswordEncoder passwordEncoder;
     @PostMapping("/join")
     public UserJoinResponse join(@RequestBody UserjoinRequest user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword());
         return userService.addUser(user);
     }
     @PostMapping("/login")
     public UserLoginResponse login(@RequestBody UserLoginRequest user, HttpServletRequest request) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(user.getPassword());
         UserLoginResponse loginUser=userService.loginUser(user);
         if(loginUser.isSuccess()==true){
             request.getSession().setAttribute("user", user.getUsername());
@@ -35,7 +35,7 @@ public class UserController {
     }
     @PutMapping("/set/userInfo")
     public UserRUDResponse updateuser(@RequestBody UserjoinRequest username){
-        username.setPassword(passwordEncoder.encode(username.getPassword()));
+        username.setPassword(username.getPassword());
         return userService.updateUser(username);
     }
 

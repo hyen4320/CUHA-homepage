@@ -1,7 +1,10 @@
 package CUHA.homepage.service.impl;
 
 import CUHA.homepage.model.Board;
+import CUHA.homepage.model.BoardFile;
 import CUHA.homepage.repository.BoardRepository;
+import CUHA.homepage.repository.BoardFileRepository;
+import CUHA.homepage.repository.ExamFileRepository;
 import CUHA.homepage.repository.UserRepository;
 import CUHA.homepage.security.dto.boardDTO.*;
 import CUHA.homepage.service.BoardService;
@@ -19,6 +22,8 @@ public class BoardServiceImpl implements BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final BoardFileRepository boardFileRepository;
+    private final ExamFileRepository examFileRepository;
 
     @Override
     public BoardmessageResponse addBoard(HttpServletRequest request, BoardRequest board) {
@@ -53,6 +58,16 @@ public class BoardServiceImpl implements BoardService {
         Board deleteBoard=board.get();
         if(!request.getSession().getAttribute("user").equals(deleteBoard.getAuthor().getUsername())) {
             return BoardmessageResponse.builder().message("본인의 게시물만 삭제가 가능합니다.").build();
+        }
+
+        List<BoardFile> fileId= boardFileRepository.findAllByBoard_Id(board.get().getId()).get();
+        if(fileId.isEmpty()) {
+            return BoardmessageResponse.builder().message("삭제되었습니다.").build();
+        }
+
+        for (BoardFile file : fileId) {
+            boardFileRepository.deleteByBoard_Id(file.getBoard().getId());
+            examFileRepository.deleteByExam_Id(file.getExam().getId());
         }
         boardRepository.deleteById(deleteBoard.getId());
         return BoardmessageResponse.builder().message("삭제되었습니다.").build();

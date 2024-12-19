@@ -13,7 +13,7 @@ import java.util.UUID;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class File {
+public class ExamFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -21,9 +21,7 @@ public class File {
     private UUID uuid;
     private String fileLoc;
     private String originalFileName;
-    @ManyToOne
-    @JoinColumn(name = "board_id")
-    private Board board;
+
     @ManyToOne
     @JoinColumn(name="exam_id")
     private Exam exam;
