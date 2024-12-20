@@ -8,6 +8,6 @@ public enum Gender {
     attack_helicopter,
     dog,
     interSex,
-    fourLineGuiter
+    fourLineGuitar
 
 }
