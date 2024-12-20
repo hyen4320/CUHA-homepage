@@ -32,7 +32,7 @@ public class UserServiceImpl implements UserService {
         }
         User addUser = User.builder()
                 .username(user.getUsername())
-                .password(user.getPassword())
+                .password(user.getPassword())//암호화한 비번
                 .userRole(UserRole.user)
                 .isActive(true)
                 .gender(user.getGender())
